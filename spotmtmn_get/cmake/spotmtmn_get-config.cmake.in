@@ -1,0 +1,54 @@
+# spotmtmn_get CMake config file
+#
+# This file sets the following variables:
+# spotmtmn_get_FOUND - Always TRUE.
+# spotmtmn_get_INCLUDE_DIRS - Directories containing the spotmtmn_get include files.
+# spotmtmn_get_IDL_DIRS - Directories containing the spotmtmn_get IDL files.
+# spotmtmn_get_LIBRARIES - Libraries needed to use spotmtmn_get.
+# spotmtmn_get_DEFINITIONS - Compiler flags for spotmtmn_get.
+# spotmtmn_get_VERSION - The version of spotmtmn_get found.
+# spotmtmn_get_VERSION_MAJOR - The major version of spotmtmn_get found.
+# spotmtmn_get_VERSION_MINOR - The minor version of spotmtmn_get found.
+# spotmtmn_get_VERSION_REVISION - The revision version of spotmtmn_get found.
+# spotmtmn_get_VERSION_CANDIDATE - The candidate version of spotmtmn_get found.
+
+message(STATUS "Found spotmtmn_get-@PROJECT_VERSION@")
+set(spotmtmn_get_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(spotmtmn_get_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(spotmtmn_get_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(spotmtmn_get_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(spotmtmn_get_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(spotmtmn_get_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(spotmtmn_get_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(spotmtmn_get_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(spotmtmn_get_VERSION @PROJECT_VERSION@)
+set(spotmtmn_get_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(spotmtmn_get_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(spotmtmn_get_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(spotmtmn_get_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
