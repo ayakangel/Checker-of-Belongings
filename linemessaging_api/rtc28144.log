@@ -1,0 +1,20 @@
+2024-11-25 21:08:44,428 file.manager INFO 2.0.2
+2024-11-25 21:08:44,428 file.manager INFO Copyright (C) 2003-2024, Noriaki Ando and OpenRTM development team,
+2024-11-25 21:08:44,428 file.manager INFO   Intelligent Systems Research Institute, AIST,
+2024-11-25 21:08:44,428 file.manager INFO Copyright (C) 2024, Noriaki Ando and OpenRTM development team,
+2024-11-25 21:08:44,428 file.manager INFO   Industrial Cyber-Physical Research Center, AIST,
+2024-11-25 21:08:44,428 file.manager INFO   All right reserved.
+2024-11-25 21:08:44,428 file.manager INFO Manager starting.
+2024-11-25 21:08:44,428 file.manager INFO Starting local logging.
+2024-11-25 21:08:44,448 file.manager.namingmanager INFO NameServer connection succeeded: corba/localhost
+2024-11-25 21:08:48,586 file.ManagerServant INFO Master manager not found
+2024-11-25 21:08:58,109 file.LocalServiceAdmin INFO All the local services are enabled.
+2024-11-25 21:10:09,228 file.manager INFO Component type conf file: linemessaging_api.conf loaded.
+2024-11-25 21:10:09,253 file.ec_base INFO setRate(1000000.000000) done
+2024-11-25 21:10:09,253 file.ec_base INFO setRate(1.000000) done
+2024-11-25 21:10:09,271 file.rtobject INFO 1 execution context was created.
+2024-11-25 21:10:20,203 file.rtobject INFO Initial active configuration set is default.
+2024-11-25 21:10:40,809 file.ManagerServant INFO Master manager not found
+2024-11-25 21:10:50,907 file.ManagerServant INFO Master manager not found
+2024-11-25 21:11:00,928 file.ManagerServant INFO Master manager not found
+2024-11-25 21:11:11,042 file.ManagerServant INFO Master manager not found

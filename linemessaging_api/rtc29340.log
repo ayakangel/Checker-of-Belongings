@@ -1,0 +1,15 @@
+2024-11-13 16:12:06,074 file.manager INFO 2.0.2
+2024-11-13 16:12:06,074 file.manager INFO Copyright (C) 2003-2024, Noriaki Ando and OpenRTM development team,
+2024-11-13 16:12:06,074 file.manager INFO   Intelligent Systems Research Institute, AIST,
+2024-11-13 16:12:06,074 file.manager INFO Copyright (C) 2024, Noriaki Ando and OpenRTM development team,
+2024-11-13 16:12:06,074 file.manager INFO   Industrial Cyber-Physical Research Center, AIST,
+2024-11-13 16:12:06,074 file.manager INFO   All right reserved.
+2024-11-13 16:12:06,074 file.manager INFO Manager starting.
+2024-11-13 16:12:06,074 file.manager INFO Starting local logging.
+2024-11-13 16:12:06,111 file.manager.namingmanager INFO NameServer connection succeeded: corba/localhost
+2024-11-13 16:12:06,111 file.LocalServiceAdmin INFO All the local services are enabled.
+2024-11-13 16:12:06,142 file.manager INFO Component type conf file: linemessaging_api.conf loaded.
+2024-11-13 16:12:06,142 file.ec_base INFO setRate(1000000.000000) done
+2024-11-13 16:12:06,142 file.ec_base INFO setRate(1.000000) done
+2024-11-13 16:12:06,142 file.rtobject INFO 1 execution context was created.
+2024-11-13 16:12:06,158 file.rtobject INFO Initial active configuration set is default.

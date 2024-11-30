@@ -1,0 +1,10 @@
+2024-11-28 23:06:31,923 file.manager INFO 2.0.2
+2024-11-28 23:06:31,923 file.manager INFO Copyright (C) 2003-2024, Noriaki Ando and OpenRTM development team,
+2024-11-28 23:06:31,931 file.manager INFO   Intelligent Systems Research Institute, AIST,
+2024-11-28 23:06:31,931 file.manager INFO Copyright (C) 2024, Noriaki Ando and OpenRTM development team,
+2024-11-28 23:06:31,931 file.manager INFO   Industrial Cyber-Physical Research Center, AIST,
+2024-11-28 23:06:31,931 file.manager INFO   All right reserved.
+2024-11-28 23:06:31,931 file.manager INFO Manager starting.
+2024-11-28 23:06:31,931 file.manager INFO Starting local logging.
+2024-11-28 23:06:31,954 file.manager.namingmanager INFO NameServer connection succeeded: corba/localhost
+2024-11-28 23:06:31,986 file.LocalServiceAdmin INFO All the local services are enabled.
