@@ -1,0 +1,15 @@
+2024-11-09 14:47:10,625 file.manager INFO 2.0.2
+2024-11-09 14:47:10,632 file.manager INFO Copyright (C) 2003-2024, Noriaki Ando and OpenRTM development team,
+2024-11-09 14:47:10,632 file.manager INFO   Intelligent Systems Research Institute, AIST,
+2024-11-09 14:47:10,632 file.manager INFO Copyright (C) 2024, Noriaki Ando and OpenRTM development team,
+2024-11-09 14:47:10,632 file.manager INFO   Industrial Cyber-Physical Research Center, AIST,
+2024-11-09 14:47:10,632 file.manager INFO   All right reserved.
+2024-11-09 14:47:10,632 file.manager INFO Manager starting.
+2024-11-09 14:47:10,632 file.manager INFO Starting local logging.
+2024-11-09 14:47:10,640 file.manager.namingmanager INFO NameServer connection succeeded: corba/localhost
+2024-11-09 14:47:10,641 file.LocalServiceAdmin INFO All the local services are enabled.
+2024-11-09 14:47:10,657 file.manager INFO Component type conf file: daymtmn_get.conf loaded.
+2024-11-09 14:47:10,657 file.ec_base INFO setRate(1000000.000000) done
+2024-11-09 14:47:10,657 file.ec_base INFO setRate(1.000000) done
+2024-11-09 14:47:10,657 file.rtobject INFO 1 execution context was created.
+2024-11-09 14:47:10,657 file.rtobject INFO Initial active configuration set is default.
