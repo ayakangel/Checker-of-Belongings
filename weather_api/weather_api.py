@@ -22,6 +22,7 @@ import RTC
 import OpenRTM_aist
 
 import json
+import os
 
 
 
@@ -190,16 +191,17 @@ class weather_api(OpenRTM_aist.DataFlowComponentBase):
     #
     #
     def onExecute(self, ec_id):
+        #"""
         date = self._d_date_in.data
         spot = self._d_spot_in.data
-
+        
         #OpenWeatherMap APIから天気情報を取得
         weather_info = get_weather_info(date,spot)
-
+     
         #天気情報を次のコンポーネントに送信
         self._d_mtmn_out.data = weather_info
         self._mtmn_outOut.write()
-    
+       
         return RTC.RTC_OK
 	
     ###
@@ -271,16 +273,19 @@ class weather_api(OpenRTM_aist.DataFlowComponentBase):
 
 
 def get_weather_info(date,spot):
-    ApiKey = "apitoken" 
+    ApiKey = os.getenv('OWM_API_KEY') 
     api = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q={city}&appid={key}"
     url = api.format(city = spot, key = ApiKey)
     response = requests.get(url)
     data = response.json()
     jsonText = json.dumps(data, indent=4)
+    """
     for entry in data["list"]:
         date_text = entry["dt_txt"]
         if date in date_text and "12:00" in date_text:
             return entry["weather"][0]["description"]
+    """
+    
 
 
 
