@@ -62,17 +62,17 @@ from flask import Flask, redirect, url_for, abort, request
 # </rtc-template>
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-CREDENTIALS_FILE='C:/Users/ayaka/workspace/applied-flag-436307-t9-110704f1ccab.json'
+CREDENTIALS_FILE='CREDENTIALS_FILE'
 credentials = service_account.Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
 calendar_service = build('calendar', 'v3', credentials=credentials)
-CLIENT_SECRETS_FILE='C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json'
+CLIENT_SECRETS_FILE='CLIENT_SECRETS_FILE'
 
 
 
 #チャンネルシークレット設定
-handler = WebhookHandler('795f10b1e474cfa21cba84b26609a8e2') 
+handler = WebhookHandler('handler') 
 #アクセストークン設定
-configuration = Configuration(access_token='x9e9JU+2wROaggNUVE38GVh9e1Mz4y7Y+N2iqDjt/wsijLPJhAJrF7MyCOzA7tPwBwBgdHMIkW5GVT9BlstPBkNJ3MyirOBnq0yid+pcpzeWKWOSP2NtlYZDuPiotzDCPdLsNzqdJp09DRlAX0Si4AdB04t89/1O/w1cDnyilFU=') 
+configuration = Configuration(access_token='access_token') 
 app = Flask(__name__)
 app.debug = False
 
