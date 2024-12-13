@@ -60,19 +60,13 @@ from flask import Flask, redirect, url_for, abort, request
 # Import Service stub modules
 # <rtc-template block="consumer_import">
 # </rtc-template>
-
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-CREDENTIALS_FILE='CREDENTIALS_FILE'
-credentials = service_account.Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
-calendar_service = build('calendar', 'v3', credentials=credentials)
-CLIENT_SECRETS_FILE='CLIENT_SECRETS_FILE'
-
-
+channel_secret = os.getenv('LINE_CHANNEL_SECRET')
+access_token = os.getenv('LINE_ACCESS_TOKEN')
 
 #チャンネルシークレット設定
-handler = WebhookHandler('handler') 
+handler = WebhookHandler(channel_secret) 
 #アクセストークン設定
-configuration = Configuration(access_token='access_token') 
+configuration = Configuration(access_token=access_token)
 app = Flask(__name__)
 app.debug = False
 
@@ -257,7 +251,7 @@ class linemessaging_api(OpenRTM_aist.DataFlowComponentBase):
     
 
     @handler.add(MessageEvent, message=TextMessageContent)
-    def handle_message(self,event):
+    def onExecute(self,event):
         with ApiClient(configuration) as api_client:
             #相手の送信した内容で条件分岐して回答を変数に代入
             user_message = event.message.text
@@ -323,11 +317,6 @@ class linemessaging_api(OpenRTM_aist.DataFlowComponentBase):
                     messages=[TextMessage(text=msg)]
                 )
             )
-    
-  
-    
-    
-    def onExecute(self, ec_id):
         return RTC.RTC_OK
 
     ###
