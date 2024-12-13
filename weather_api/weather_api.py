@@ -271,7 +271,7 @@ class weather_api(OpenRTM_aist.DataFlowComponentBase):
 
 
 def get_weather_info(date,spot):
-    ApiKey = "c1b79f6e4c07cc80f8d19cddac2a6ae6" 
+    ApiKey = "apitoken" 
     api = "http://api.openweathermap.org/data/2.5/forecast?units=metric&q={city}&appid={key}"
     url = api.format(city = spot, key = ApiKey)
     response = requests.get(url)
