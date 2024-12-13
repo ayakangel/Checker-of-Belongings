@@ -122,7 +122,10 @@ class googlecalender_api(OpenRTM_aist.DataFlowComponentBase):
 
         # initialize of configuration-data.
         # <rtc-template block="init_conf_param">
-		
+	self._config_credentials_file = ['C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json', '']
+        self._config_token_path = ['C:/Users/ayaka/workspace/token/token.pickle', '']
+        self.bindParameter("credentials_file", self._config_credentials_file, "C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json")
+        self.bindParameter("token_path", self._config_token_path, "C:/Users/ayaka/workspace/token/token.pickle")	
         # </rtc-template>
 
 
@@ -232,7 +235,7 @@ class googlecalender_api(OpenRTM_aist.DataFlowComponentBase):
             date_str = self._message_inIn.read().data  # 受信した日付情報（"YYYY-MM-DD"形式）
 
             # Google Calendarからイベント情報を取得
-            credentials = authenticate_google()
+            credentials = authenticate_google(self._config_credentials_file[0], self._config_token_path[0])
             service = build('calendar', 'v3', credentials=credentials)
             start_of_day = date_str + 'T00:00:00Z'
             end_of_day = date_str + 'T23:59:59Z'
