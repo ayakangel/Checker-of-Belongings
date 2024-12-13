@@ -37,14 +37,15 @@ import OpenRTM_aist
 
 # Import Service stub modules
 # <rtc-template block="consumer_import">
+
 # </rtc-template>
 
 # Google Calendar API設定
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-CREDENTIALS_FILE = 'C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json'  # OAuthクライアントIDのJSONファイルのパス
 
+CREDENTIALS_FILE = os.getenv('GOOGLE_CREDENTIALS_FILE') 
 # トークンファイルの保存場所
-TOKEN_PATH = 'C:/Users/ayaka/workspace/token/token.pickle'
+TOKEN_PATH = os.getenv('GOOGLE_TOKEN_PATH')
 
 
 def authenticate_google():
@@ -70,6 +71,7 @@ def authenticate_google():
         # 新しいトークンを保存
         with open(TOKEN_PATH, 'wb') as token:
             pickle.dump(creds, token)
+            
 
     return creds
 
@@ -122,10 +124,11 @@ class googlecalender_api(OpenRTM_aist.DataFlowComponentBase):
 
         # initialize of configuration-data.
         # <rtc-template block="init_conf_param">
-	self._config_credentials_file = ['C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json', '']
+        self._config_credentials_file = ['C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json', '']
         self._config_token_path = ['C:/Users/ayaka/workspace/token/token.pickle', '']
         self.bindParameter("credentials_file", self._config_credentials_file, "C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json")
-        self.bindParameter("token_path", self._config_token_path, "C:/Users/ayaka/workspace/token/token.pickle")	
+        self.bindParameter("token_path", self._config_token_path, "C:/Users/ayaka/workspace/token/token.pickle")
+
         # </rtc-template>
 
 
