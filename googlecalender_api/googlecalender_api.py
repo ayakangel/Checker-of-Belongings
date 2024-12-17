@@ -124,10 +124,10 @@ class googlecalender_api(OpenRTM_aist.DataFlowComponentBase):
 
         # initialize of configuration-data.
         # <rtc-template block="init_conf_param">
-        self._config_credentials_file = ['C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json', '']
-        self._config_token_path = ['C:/Users/ayaka/workspace/token/token.pickle', '']
-        self.bindParameter("credentials_file", self._config_credentials_file, "C:/Users/ayaka/workspace/client_secret_137115175170-n02tgetvlo051kalsk5so8p5aeik3l1s.apps.googleusercontent.com.json")
-        self.bindParameter("token_path", self._config_token_path, "C:/Users/ayaka/workspace/token/token.pickle")
+        self._config_credentials_file = [CREDENTIALS_FILE]
+        self._config_token_path = [TOKEN_PATH]
+        self.bindParameter("credentials_file", self._config_credentials_file, CREDENTIALS_FILE)
+        self.bindParameter("token_path", self._config_token_path, TOKEN_PATH)
 
         # </rtc-template>
 
@@ -236,6 +236,21 @@ class googlecalender_api(OpenRTM_aist.DataFlowComponentBase):
     def onExecute(self, ec_id):
         if self._message_inIn.isNew():
             date_str = self._message_inIn.read().data  # 受信した日付情報（"YYYY-MM-DD"形式）
+            # 'none' の場合、エラーメッセージを出力して処理を停止 
+            if date_str == 'none': 
+                self._d_dateday_out.data = RTC.TimedString(RTC.Time(0, 0), "this is not available") 
+                self._d_spot_out.data = RTC.TimedString(RTC.Time(0, 0), "No location") 
+                self._dateday_outOut.write() 
+                self._spot_outOut.write()
+                return
+            # 日付フォーマットを検証 
+            try: 
+                datetime.datetime.strptime(date_str, '%Y-%m-%d') 
+            except ValueError: 
+                self._d_dateday_out.data = RTC.TimedString(RTC.Time(0, 0), "Invalid date format") 
+                self._d_spot_out.data = RTC.TimedString(RTC.Time(0, 0), "No location") 
+                self._dateday_outOut.write() 
+                self._spot_outOut.write()
 
             # Google Calendarからイベント情報を取得
             credentials = authenticate_google(self._config_credentials_file[0], self._config_token_path[0])
