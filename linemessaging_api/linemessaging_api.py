@@ -44,7 +44,7 @@ import requests
 import webbrowser
 import os
 import json
-
+import threading
 
 # Import RTM module
 import RTC
@@ -60,6 +60,7 @@ from flask import Flask, redirect, url_for, abort, request
 # Import Service stub modules
 # <rtc-template block="consumer_import">
 # </rtc-template>
+
 channel_secret = os.getenv('LINE_CHANNEL_SECRET')
 access_token = os.getenv('LINE_ACCESS_TOKEN')
 
@@ -67,26 +68,7 @@ access_token = os.getenv('LINE_ACCESS_TOKEN')
 handler = WebhookHandler(channel_secret) 
 #アクセストークン設定
 configuration = Configuration(access_token=access_token)
-app = Flask(__name__)
-app.debug = False
 
-@app.route("/callback", methods=['POST'])
-def callback():
-    # get X-Line-Signature header value
-    signature = request.headers['X-Line-Signature']
-
-    # get request body as text
-    body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
-
-    # handle webhook body
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        app.logger.info("Invalid signature. Please check your channel access token/channel secret.")
-        abort(400)
-
-    return 'OK'
 
 
 # This module's spesification
@@ -133,7 +115,8 @@ class linemessaging_api(OpenRTM_aist.DataFlowComponentBase):
         self._d_spotmtmncombo_out = OpenRTM_aist.instantiateDataType(RTC.TimedString)
         self._spotmtmncombo_outOut = OpenRTM_aist.OutPort("spotmtmncombo_out", self._d_spotmtmncombo_out)
 
-
+        #self._user_message = None
+        #self.line_bot_api = MessagingApi(configuration)
 		
 
 
@@ -220,9 +203,35 @@ class linemessaging_api(OpenRTM_aist.DataFlowComponentBase):
     ## @return RTC::ReturnCode_t
     ##
     ##
-    #def onActivated(self, ec_id):
-    #
-    #    return RTC.RTC_OK
+    def onActivated(self, ec_id):
+        def run_flask_app():
+            
+            app = Flask(__name__)
+            
+            @app.route('/callback', methods=['POST'])
+            def callback():
+                signature = request.headers['X-Line-Signature']
+
+                # get request body as text
+                body = request.get_data(as_text=True)
+                app.logger.info("Request body: " + body)
+
+                # handle webhook body
+                try:
+                    handler.handle(body, signature)
+                except InvalidSignatureError:
+                    app.logger.info("Invalid signature. Please check your channel access token/channel secret.")
+                    abort(400)
+
+                return 'OK'
+
+
+            app.run(host='0.0.0.0', port=5000)
+
+        # Flaskアプリケーションを非同期で実行
+        flask_thread = threading.Thread(target=run_flask_app)
+        flask_thread.start()
+        return RTC.RTC_OK
 	
     ###
     ##
@@ -233,9 +242,9 @@ class linemessaging_api(OpenRTM_aist.DataFlowComponentBase):
     ## @return RTC::ReturnCode_t
     ##
     ##
-    #def onDeactivated(self, ec_id):
-    #
-    #    return RTC.RTC_OK
+    def onDeactivated(self, ec_id):
+        print("Deactivated this Component")
+        return RTC.RTC_OK
 	
     ##
     #
@@ -248,77 +257,88 @@ class linemessaging_api(OpenRTM_aist.DataFlowComponentBase):
     #
 
     
-    
-
-    @handler.add(MessageEvent, message=TextMessageContent)
-    def onExecute(self,event):
-        with ApiClient(configuration) as api_client:
-            #相手の送信した内容で条件分岐して回答を変数に代入
-            user_message = event.message.text
-            # 日付パターン（例: 2024-12-25）
-            date_pattern = r'(\d{4})-(\d{1,2})-(\d{1,2})'
-            # 曜日パターン
-            weekday_pattern = r'(月曜日|火曜日|水曜日|木曜日|金曜日|土曜日|日曜日)'
-            # 日本語の曜日を英語に変換する辞書
-            weekday_translation = {
-        '月曜日': 'Monday',
-        '火曜日': 'Tuesday',
-        '水曜日': 'Wednesday',
-        '木曜日': 'Thursday',
-        '金曜日': 'Friday',
-        '土曜日': 'Saturday',
-        '日曜日': 'Sunday'
-    }
+    def onExecute(self, ec_id):
         
-            # メッセージが日付なのかをチェック
-            date_match = re.search(date_pattern, user_message)
-            if date_match:
-                date_info = date_match.group(0) # YYYY-MM-DD形式で保持 
-                self._d_message_out.data = self.date_info 
-                self._message_outOut.write()
-                if self._daymtmn_inIn.isNew():
-                    data = self._daymtmn_inIn.read()
-                    self.day_item = data.data
-
-                if self._spotmtmn_inIn.isNew():
-                    data = self._spotmtmn_inIn.read()
-                    self.spot_item = data.data
-
-                if self._weathermtmn_inIn.isNew():
-                    data = self._weathermtmn_inIn.read()
-                    self.weather_item = data.data
-                
-                # メッセージの生成と送信
-                msg = f"{date_info}\n持ち物：{self.weather_item}, {self.spot_item}, {self.day_item}"
-                msg = f"{date_info}を確認しました。"
+        @handler.add(MessageEvent, message=TextMessageContent)
+        def handle_message(event):
+            with ApiClient(configuration) as api_client:
+                #相手の送信した内容で条件分岐して回答を変数に代入
+                user_message = event.message.text
+                # 日付パターン（例: 2024-12-25）
+                date_pattern = r'(\d{4})-(\d{1,2})-(\d{1,2})'
+                # 曜日パターン
+                weekday_pattern = r'(月曜日|火曜日|水曜日|木曜日|金曜日|土曜日|日曜日)'
+                # 日本語の曜日を英語に変換する辞書
+                weekday_translation = {
+            '月曜日': 'Monday',
+            '火曜日': 'Tuesday',
+            '水曜日': 'Wednesday',
+            '木曜日': 'Thursday',
+            '金曜日': 'Friday',
+            '土曜日': 'Saturday',
+            '日曜日': 'Sunday'
+        }
             
-            
-            else:
-            # メッセージが曜日なのかをチェック
-                weekday_match = re.search(weekday_pattern, user_message)
-                if weekday_match:
-                    weekday_jp = weekday_match.group(1)
-                    weekday = weekday_translation.get(weekday_jp, weekday_jp)  # 日本語の曜日を英語に変換
-                    combo_info = user_message.replace(weekday_jp,weekday)
-                    msg = f"{combo_info}を保存しました。"
-                    self._d_daymtmncombo_out.data = combo_info
-                    self._daymtmncombo_outOut.write()
+                # メッセージが日付なのかをチェック
+                date_match = re.search(date_pattern, user_message)
+                if date_match:
+                    date_info = date_match.group(0)  # YYYY-MM-DD形式で保持 
+                    send_nextcomp(date_info,'none','none')
+                    msg = f"{date_info}\n持ち物：{weather_item}, {spot_item}, {day_item}"
+                    #msg = f"{date_info}を確認しました。"
                 
                 else:
-                    # 日付でも曜日でもない場合
-                    self._d_spotmtmncombo_out.data = user_message
-                    self._spotmtmncombo_outOut.write()
-                    msg = f"{user_message}を保存しました。"
+                    #メッセージが曜日なのかをチェック
+                    weekday_match = re.search(weekday_pattern, user_message)
+                    if weekday_match:
+                        weekday_jp = weekday_match.group(1)
+                        weekday = weekday_translation.get(weekday_jp, weekday_jp)  # 日本語の曜日を英語に変換
+                        combo_info = user_message.replace(weekday_jp,weekday)
+                        send_nextcomp('none',combo_info,'none')
+                        msg = f"{combo_info}を保存しました。"
+                        
+                    
+                    else:
+                        # 日付でも曜日でもない場合
+                        send_nextcomp('none','none',user_message)
+                        msg = f"{user_message}を保存しました。"
 
-            line_bot_api = MessagingApi(api_client)
-            line_bot_api.reply_message_with_http_info(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=msg)]
+                line_bot_api = MessagingApi(api_client)
+                line_bot_api.reply_message_with_http_info(
+                    ReplyMessageRequest(
+                        reply_token = event.reply_token,
+                        messages=[TextMessage(text=msg)]
+                    )
                 )
-            )
-        return RTC.RTC_OK
+        
+        def send_nextcomp(dtmeg,dymeg,smeg):
+            self._d_message_out.data = dtmeg
+            self._message_outOut.write()
 
+            self._d_daymtmncombo_out.data = dymeg
+            self._daymtmncombo_outOut.write()
+
+            self._d_spotmtmncombo_out.data = smeg
+            self._spotmtmncombo_outOut.write()
+        
+        while not self._daymtmn_inIn.isNew():
+            time.sleep(0.01)
+        data = self._daymtmn_inIn.read()
+        day_item = data.data
+
+        while not self._spotmtmn_inIn.isNew():
+            time.sleep(0.01)
+        data = self._spotmtmn_inIn.read()
+        spot_item = data.data
+
+        while not self._weathermtmn_inIn.isNew():
+            time.sleep(0.01)
+        data = self._weathermtmn_inIn.read()
+        weather_item = data.data
+                
+    
+        return RTC.RTC_OK
+    
     ###
     ##
     ## The aborting action when main logic error occurred.
@@ -417,7 +437,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
