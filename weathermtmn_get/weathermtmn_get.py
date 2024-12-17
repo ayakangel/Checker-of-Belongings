@@ -180,24 +180,18 @@ class weathermtmn_get(OpenRTM_aist.DataFlowComponentBase):
     #
     #
     def onExecute(self, ec_id):
-        weather = self._d_weather_in.data #T.T
+        weather = self._d_weather_in.data
         #print("executing..")
-#        weather = self.self._weather_inIn.data # T.T.
         #print(f"Received weather data: {weather}") 
         if 'light rain' in weather:
-#            item = '折り畳み傘'
             item = "折り畳み傘"
         elif 'rain' in weather:
-#            item = '傘'
             item = "傘" # T.T.
         elif 'clear sky' in weather:
-#            item = '日傘'
             item = "日傘" # T.T.
         else:
-#            item = '雨は降らないので傘はいりません'
-            item = "特になし" # T.T.
+            item = "雨具は特になし" # T.T.
             
-#        self._d_weathermtmn_out.data = item
         self._d_weathermtmn_out.data = item
         self._weathermtmn_outOut.write() 
         #print(f"Sent item data: {item}") 
